@@ -10,7 +10,8 @@ var popup = (function() {
     var handle, row;
 
     handle = inputEl.value;
-
+    inputEl.value = '';
+    
     // @oiva -> oiva
     if (handle.substring(0, 1) == '@') {
       handle = handle.substring(1);
@@ -18,7 +19,6 @@ var popup = (function() {
 
     console.log('addHandle '+handle);
     if (_.contains(handles, handle)) {
-      inputEl.value = '';
       return;
     }
     handles.push(handle);
@@ -30,6 +30,7 @@ var popup = (function() {
   };
 
   getHandles = function() {
+    console.log('get handles');
     chrome.storage.local.get('handles', function (result) {
       if (result.handles !== undefined) {
         handles = result.handles;
@@ -53,7 +54,9 @@ var popup = (function() {
   };
 
   syncHandles = function() {
-
+    chrome.storage.local.set({'handles': handles}, function() {
+      message('Settings saved');
+    });
   };
 
   return {
