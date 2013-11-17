@@ -1,10 +1,12 @@
 {
 	"manifest_version": 2,
-	"name": "Chrome Extension Template with Twitter Bootstrap 3.0",
-	"description": "A basic template for a Chrome Extension using Twitter Bootstrap 3",
+	"name": "Remove Retweets",
+	"description": "An Extension for removing retweets of given users on twitter.com",
 	"version": "1.0",
 	"permissions": [
-		"storage"
+		"https://twitter.com/",
+		"storage",
+		"activeTab"
 	],
 	"icons": { 
 		"16": "img/icon16.png",
@@ -18,8 +20,15 @@
 		},
 		"default_popup": "popup.html"
 	},
-	"content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+	"content_security_policy": "script-src 'self'; object-src 'self'",
 	"web_accessible_resources": [
-		"img/icon128.png"
+		"img/icon128.png",
+		"js/underscore-1.5.2.min.map"
+	],
+	"content_scripts": [
+    {
+      "matches": ["https://twitter.com/*"],
+      "js": ["js/underscore-1.5.2.min.js", "js/content.js"]
+    }
 	]
 }
