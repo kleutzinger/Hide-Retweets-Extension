@@ -1,10 +1,8 @@
 var popup = (function() {
   'use strict';
-
-  var addHandle, getHandles, onListClick, removeHandle, renderHandles,
-    setupElements, setupListeners, syncHandles;
-
-  var handles = [], inputEl, listEl, newRowEl;
+  var handles = [], inputEl, listEl, newRowEl,
+    addHandle, getHandles, onKeyDown, onListClick, removeHandle,
+    renderHandles, setupElements, setupListeners, syncHandles;
 
   addHandle = function() {
     var handle;
@@ -36,6 +34,15 @@ var popup = (function() {
         renderHandles();
       }
     });
+  };
+
+  onKeyDown = function(event) {
+    if (event.keyCode === 10) {
+      addHandle();
+      event.stopPropagation();
+      event.preventDefault();
+      return false;
+    }
   };
 
   onListClick = function(event) {
@@ -76,6 +83,7 @@ var popup = (function() {
   setupListeners = function() {
     document.getElementById('add').addEventListener('click', addHandle);
     listEl.addEventListener('click', onListClick);
+    inputEl.addEventListener('keyup', onKeyDown, true);
   };
 
   syncHandles = function() {
