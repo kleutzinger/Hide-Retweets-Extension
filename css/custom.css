@@ -5,7 +5,7 @@
 ***/
 
 body, section {			/* Change width and height to own preferences */
-	width: 320px;
+	width: 300px;
 	height: 400px;
 	overflow-x: hidden;
 }
