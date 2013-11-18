@@ -5,7 +5,7 @@
 ***/
 
 body, section {			/* Change width and height to own preferences */
-	width: 500px;
+	width: 320px;
 	height: 400px;
 	overflow-x: hidden;
 }
@@ -18,3 +18,26 @@ section { padding: 5px;}
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); }
 ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive  { background: red; }
+
+h1 {
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+#handles {
+  list-style: none;
+  padding-left: 10px;
+}
+#handles li {
+  position: relative;
+}
+#handles li button.close {
+  display: inline-block;
+  float: none;
+  left: 127px;
+  position: absolute;
+  top: -2px
+}
+#new-row {
+  top: 10px;
+}
