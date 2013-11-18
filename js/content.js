@@ -8,6 +8,9 @@ var NoRetweet = (function() {
 
   getHandles = function() {
     chrome.storage.sync.get('handles', function (result) {
+      if (chrome.runtime.lastError) {
+        return;
+      }
       if (result.handles !== undefined) {
         handles = result.handles;
         console.log('got handles', handles);
@@ -33,7 +36,10 @@ var NoRetweet = (function() {
   };
 
   onStorageChanged = function(changes, namespace) {
-    console.log(changes, namespace);
+    if (namespace === 'sync' && changes.handles && changes.handles.newValue) {
+      handles = changes.handles.newValue;
+      queue();
+    }
   };
 
   queue = function() {
