@@ -7,7 +7,7 @@ var NoRetweet = (function() {
   var handles = [], throttleTimeout = null;
 
   getHandles = function() {
-    chrome.storage.local.get('handles', function (result) {
+    chrome.storage.sync.get('handles', function (result) {
       if (result.handles !== undefined) {
         handles = result.handles;
         console.log('got handles', handles);
