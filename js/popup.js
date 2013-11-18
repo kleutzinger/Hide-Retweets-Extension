@@ -7,7 +7,6 @@ var popup = (function() {
   var handles = [], inputEl, listEl, newRowEl;
 
   addHandle = function() {
-    console.log('addHandle');
     var handle;
 
     handle = inputEl.value;
@@ -18,9 +17,7 @@ var popup = (function() {
       handle = handle.substring(1);
     }
 
-    console.log('addHandle '+handle);
     if (_.contains(handles, handle)) {
-      console.log('old');
       return;
     }
     handles.push(handle);
@@ -30,15 +27,11 @@ var popup = (function() {
   };
 
   getHandles = function() {
-    console.log('get handles');
     chrome.storage.sync.get('handles', function (result) {
       if (chrome.runtime.lastError) {
         return;
       }
       if (result.handles !== undefined) {
-        console.log('got handles', result.handles);
-        console.log(this);
-        console.log(renderHandles);
         handles = result.handles;
         renderHandles();
       }
@@ -75,13 +68,13 @@ var popup = (function() {
   };
 
   setupElements = function() {
-    inputEl = document.querySelector('#handle');
-    listEl = document.querySelector('#handles');
-    newRowEl = document.querySelector('#new-row');
+    inputEl = document.getElementById('handle');
+    listEl = document.getElementById('handles');
+    newRowEl = document.getElementById('new-row');
   };
 
   setupListeners = function() {
-    document.querySelector('#add').addEventListener('click', addHandle);
+    document.getElementById('add').addEventListener('click', addHandle);
     listEl.addEventListener('click', onListClick);
   };
 
@@ -91,13 +84,11 @@ var popup = (function() {
         // handle error?
         return;
       }
-      console.log('Settings saved');
     });
   };
 
   return {
     init: function() {
-      console.log('popup init');
       getHandles();
       setupElements();
       setupListeners();

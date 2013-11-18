@@ -13,7 +13,6 @@ var NoRetweet = (function() {
       }
       if (result.handles !== undefined) {
         handles = result.handles;
-        console.log('got handles', handles);
       }
     });
   };
@@ -29,7 +28,6 @@ var NoRetweet = (function() {
     if (el.tagName === 'LI') {
       children = el.getElementsByTagName('div');
       if (children.length && children[0].hasAttribute('data-retweeter')) {
-        console.log('retweet inserted');
         queue();
       }
     }
@@ -49,11 +47,9 @@ var NoRetweet = (function() {
   };
 
   run = function() {
-    console.log('run no-retweet');
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
       var retweeter = element.getAttribute('data-retweeter');
       if (_.contains(handles, retweeter)) {
-        console.log('remove retweet by '+retweeter);
         element.remove();
       }
     });
@@ -61,11 +57,10 @@ var NoRetweet = (function() {
   };
 
   setupListeners = function() {
-    console.log('setup event listeners');
     window.onpopstate = run;
 
     // tweet list
-    var list = document.querySelector('#stream-items-id');
+    var list = document.getElementById('stream-items-id');
     list.addEventListener('DOMNodeInserted', onDomNodeInserted);
 
     // storage listener
