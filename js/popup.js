@@ -32,6 +32,9 @@ var popup = (function() {
   getHandles = function() {
     console.log('get handles');
     chrome.storage.sync.get('handles', function (result) {
+      if (chrome.runtime.lastError) {
+        return;
+      }
       if (result.handles !== undefined) {
         console.log('got handles', result.handles);
         console.log(this);
@@ -68,6 +71,10 @@ var popup = (function() {
 
   syncHandles = function() {
     chrome.storage.sync.set({'handles': handles}, function() {
+      if (chrome.runtime.lastError) {
+        // handle error?
+        return;
+      }
       console.log('Settings saved');
     });
   };
