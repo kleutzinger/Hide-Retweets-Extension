@@ -1,8 +1,8 @@
 var popup = (function() {
   'use strict';
 
-  var addHandle, getHandles, removeHandle, renderHandles, setupElements,
-    setupListeners, syncHandles;
+  var addHandle, getHandles, onListClick, removeHandle, renderHandles,
+    setupElements, setupListeners, syncHandles;
 
   var handles = [], inputEl, listEl, newRowEl;
 
@@ -45,8 +45,21 @@ var popup = (function() {
     });
   };
 
-  removeHandle = function() {
+  onListClick = function(event) {
+    var handle;
+    if (event.target.getAttribute('class') !== 'close') {
+      return;
+    }
+
+    handle = event.target.previousElementSibling.innerHTML;
+    removeHandle(handle);
+    event.stopPropagation();
+  };
+
+  removeHandle = function(handle) {
+    handles = _.without(handles, handle);
     renderHandles();
+    syncHandles();
   };
 
   renderHandles = function() {
@@ -54,7 +67,9 @@ var popup = (function() {
     _.invoke(prevHandles, 'remove');
     
     _.each(handles, function(handle) {
-      html += '<li class="handle">@' + handle + '</li>';
+      html += '<li class="handle">@<span>' + handle + '</span>';
+      html += '<button type="button" class="close" aria-hidden="true">&times;</button>';
+      html += '</li>';
     });
     newRowEl.insertAdjacentHTML('beforebegin', html);
   };
@@ -67,6 +82,7 @@ var popup = (function() {
 
   setupListeners = function() {
     document.querySelector('#add').addEventListener('click', addHandle);
+    listEl.addEventListener('click', onListClick);
   };
 
   syncHandles = function() {
