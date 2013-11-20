@@ -37,7 +37,7 @@ var popup = (function() {
   };
 
   onKeyDown = function(event) {
-    if (event.keyCode === 10) {
+    if (event.keyCode === 13) {
       addHandle();
       event.stopPropagation();
       event.preventDefault();
@@ -83,7 +83,8 @@ var popup = (function() {
   setupListeners = function() {
     document.getElementById('add').addEventListener('click', addHandle);
     listEl.addEventListener('click', onListClick);
-    inputEl.addEventListener('keyup', onKeyDown, true);
+    inputEl.addEventListener('keydown', onKeyDown, true);
+    setTimeout(function() {inputEl.focus();}, 150);
   };
 
   syncHandles = function() {
