@@ -27,8 +27,9 @@
 	],
 	"content_scripts": [
     {
-      "matches": ["https://twitter.com/*"],
-      "js": ["js/underscore-1.5.2.min.js", "js/content.js"]
+      "matches": ["*://twitter.com/*"],
+      "js": ["js/underscore-1.5.2.min.js", "js/content.js"],
+      "run_at": "document_end"
     }
 	]
 }
