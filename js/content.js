@@ -24,13 +24,34 @@ var NoRetweet = (function() {
 
   /* see if a new retweet was added to DOM, queue removal */
   onDomNodeInserted = function(event) {
-    var children, el = event.target;
-    if (el.tagName !== 'LI') {
+    var children, className, classNameMatch,
+      possibleClassNames = ['content-main', 'recent-tweets'];
+
+    // text nodes
+    if (!event.target.getAttribute) {
       return;
     }
-    children = el.getElementsByTagName('div');
-    if (children.length && children[0].hasAttribute('data-retweeter')) {
+
+    className = event.target.getAttribute('class');
+    if (className === null) {
+      return;
+    }
+
+    classNameMatch = _.some(possibleClassNames, function(hit) {
+      return className.indexOf(hit) !== -1;
+    });
+
+    if (classNameMatch) {
+      console.log('hit '+className);
       queue();
+      return;
+    }
+
+    if (event.target.getAttribute('data-item-type') !== 'tweet') {
+      children = event.target.getElementsByTagName('div');
+      if (children.length && children[0].hasAttribute('data-retweeter')) {
+        queue();
+      }
     }
   };
 
@@ -48,6 +69,7 @@ var NoRetweet = (function() {
   };
 
   run = function() {
+    console.log('run');
     var lowercaseHandles = _.invoke(handles, 'toLowerCase');
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
       var retweeter = element.getAttribute('data-retweeter');
@@ -60,14 +82,13 @@ var NoRetweet = (function() {
 
   setupListeners = function() {
     // tweet list: listen to new tweets appearing
-    var list = document.getElementById('stream-items-id');
-    list.addEventListener('DOMNodeInserted', onDomNodeInserted);
+    document.addEventListener('DOMNodeInserted', onDomNodeInserted);
 
     // storage listener: listen to changes to list of handles
     chrome.storage.onChanged.addListener(onStorageChanged);
 
-    // run when a page is loaded
-    window.onpopstate = run;
+    // run when a page is loaded or URL changes.
+    window.onpopstate = queue;
   };
 
   return {
