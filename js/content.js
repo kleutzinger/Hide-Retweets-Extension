@@ -69,11 +69,12 @@ var NoRetweet = (function() {
 
   run = function() {
     console.log('run');
-    var lowercaseHandles = _.invoke(handles, 'toLowerCase');
+    var count = 0, lowercaseHandles = _.invoke(handles, 'toLowerCase');
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
       var retweeter = element.getAttribute('data-retweeter');
       if (_.contains(lowercaseHandles, retweeter.toLowerCase())) {
         element.remove();
+        count += 1;
       }
     });
     throttleTimeout = null;
