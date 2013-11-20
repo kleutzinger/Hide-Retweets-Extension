@@ -25,11 +25,12 @@ var NoRetweet = (function() {
   /* see if a new retweet was added to DOM, queue removal */
   onDomNodeInserted = function(event) {
     var children, el = event.target;
-    if (el.tagName === 'LI') {
-      children = el.getElementsByTagName('div');
-      if (children.length && children[0].hasAttribute('data-retweeter')) {
-        queue();
-      }
+    if (el.tagName !== 'LI') {
+      return;
+    }
+    children = el.getElementsByTagName('div');
+    if (children.length && children[0].hasAttribute('data-retweeter')) {
+      queue();
     }
   };
 
@@ -57,14 +58,15 @@ var NoRetweet = (function() {
   };
 
   setupListeners = function() {
-    window.onpopstate = run;
-
-    // tweet list
+    // tweet list: listen to new tweets appearing
     var list = document.getElementById('stream-items-id');
     list.addEventListener('DOMNodeInserted', onDomNodeInserted);
 
-    // storage listener
+    // storage listener: listen to changes to list of handles
     chrome.storage.onChanged.addListener(onStorageChanged);
+
+    // run when a page is loaded
+    window.onpopstate = run;
   };
 
   return {
