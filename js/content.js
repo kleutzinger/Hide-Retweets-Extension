@@ -42,12 +42,11 @@ var NoRetweet = (function() {
     });
 
     if (classNameMatch) {
-      console.log('hit '+className);
       queue();
       return;
     }
 
-    if (event.target.getAttribute('data-item-type') !== 'tweet') {
+    if (event.target.getAttribute('data-item-type') === 'tweet') {
       children = event.target.getElementsByTagName('div');
       if (children.length && children[0].hasAttribute('data-retweeter')) {
         queue();
