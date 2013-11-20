@@ -68,7 +68,7 @@ var NoRetweet = (function() {
   };
 
   run = function() {
-    console.log('run');
+    //console.log('run');
     var count = 0, lowercaseHandles = _.invoke(handles, 'toLowerCase');
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
       var retweeter = element.getAttribute('data-retweeter');
