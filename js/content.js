@@ -48,9 +48,10 @@ var NoRetweet = (function() {
   };
 
   run = function() {
+    var lowercaseHandles = _.invoke(handles, 'toLowerCase');
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
       var retweeter = element.getAttribute('data-retweeter');
-      if (_.contains(handles, retweeter)) {
+      if (_.contains(lowercaseHandles, retweeter.toLowerCase())) {
         element.remove();
       }
     });
