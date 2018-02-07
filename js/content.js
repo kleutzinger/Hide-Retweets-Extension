@@ -4,7 +4,7 @@ var NoRetweet = (function() {
   var getHandles, init, onDomNodeInserted, onStorageChanged, queue, run,
     setupListeners;
   
-  var handles = [], throttleTimeout = null;
+  var handles = [], throttleTimeout = null, blockCount = {}, ranOnce = 0;;
 
   getHandles = function() {
     chrome.storage.sync.get('handles', function (result) {
@@ -68,15 +68,30 @@ var NoRetweet = (function() {
   };
 
   run = function() {
+    ranOnce = 1;
+    console.log("RUNNIN");
     //console.log('run');
     var count = 0, lowercaseHandles = _.invoke(handles, 'toLowerCase');
+    var wildcard = _.contains(handles, "***")
     _.each(document.querySelectorAll('[data-retweeter]'), function(element) {
-      var retweeter = element.getAttribute('data-retweeter');
-      if (_.contains(lowercaseHandles, retweeter.toLowerCase())) {
-        element.remove();
+      var retweeter = element.getAttribute('data-retweeter').toLowerCase();
+      if (_.contains(lowercaseHandles, retweeter) || wildcard) {
+        console.log(retweeter)
+        // element.remove();
+        // return;
+        var replacer = document.createElement("div");
+        replacer.setAttribute("style", "color:gray; position:absolute; top:50%; transform:translateY(-50%);");
+        // replacer.className = "js-stream-item stream-item stream-item";
+        replacer.appendChild(document.createTextNode(`hidden @${retweeter} retweet`));
+        if(element.querySelector("div.content"))element.querySelector("div.content").remove();
+        // element.querySelector("span.js-retweet-text").replaceWith(replacer);
+        if(element.querySelector("div.context"))element.querySelector("div.context").replaceWith(replacer);
         count += 1;
+        blockCount[retweeter] = (blockCount[retweeter] || 0) + 1;
+        blockCount['total'] = (blockCount['total'] || 0) + 1;
       }
     });
+    console.log(blockCount);
     throttleTimeout = null;
   };
 
@@ -89,6 +104,7 @@ var NoRetweet = (function() {
 
     // run when a page is loaded or URL changes.
     window.onpopstate = queue;
+    setTimeout(()=> {if (!ranOnce) run()}, 4000); // sketchy race condition for profile pages
   };
 
   return {

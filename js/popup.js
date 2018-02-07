@@ -1,8 +1,8 @@
 var popup = (function() {
   'use strict';
-  var handles = [], inputEl, listEl, newRowEl,
+  var handles = [], inputEl, listEl, newRowEl, toggleWildcard,
     addHandle, getHandles, onKeyDown, onListClick, removeHandle,
-    renderHandles, setupElements, setupListeners, syncHandles;
+    renderHandles, setupElements, setupListeners, syncHandles, wildEl;
 
   addHandle = function() {
     var handle;
@@ -23,6 +23,18 @@ var popup = (function() {
 
     renderHandles();
   };
+
+  toggleWildcard = function() {
+    console.log("b4", handles);
+    if (_.contains(handles, "***")){
+      removeHandle("***");
+    }
+    else{
+      inputEl.value = "***"
+      addHandle();
+    }
+    console.log("after", handles)
+  }
 
   getHandles = function() {
     chrome.storage.sync.get('handles', function (result) {
@@ -63,15 +75,26 @@ var popup = (function() {
   };
 
   renderHandles = function() {
+    if (_.contains(handles, "***")){
+      document.body.style.background = "lightblue";
+    }
+    else{
+      document.body.style.background = "white"
+    }
     var html = '', prevHandles = listEl.querySelectorAll('.handle');
+    var wildcard = _.contains(handles, "***");
+    html += '<li id="togglez" class="handle" ><span>' + "Block All Users" + '</span>';
+    html += `<input type="checkbox" ${wildcard ? "checked='y'":''} class="close" aria-hidden="false"></input>`;
+    html += '</li>';
     _.invoke(prevHandles, 'remove');
-    
-    _.each(handles, function(handle) {
+    _.each(_.without(handles, "***"), function(handle) {
       html += '<li class="handle">@<span>' + handle + '</span>';
       html += '<button type="button" class="close" aria-hidden="true">&times;</button>';
+      console.log(handle);
       html += '</li>';
     });
     newRowEl.insertAdjacentHTML('beforebegin', html);
+    document.getElementById('togglez').addEventListener('click', toggleWildcard)
   };
 
   setupElements = function() {

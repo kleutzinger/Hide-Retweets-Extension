@@ -38,6 +38,15 @@ h1 {
   position: absolute;
   top: -2px
 }
+
+#handles li input.close {
+  display: inline-block;
+  float: none;
+  left: 127px;
+  position: absolute;
+  top: -2px
+  opacity:1.0;
+}
 #new-row {
   top: 10px;
 }
